@@ -9,6 +9,7 @@
 \usepackage{underscore}
 \usepackage{fancyhdr}
 \usepackage{hyperref}
+\usepackage{enumitem}
 \usepackage{amssymb}
 \usepackage{amsmath}
 
@@ -40,6 +41,11 @@
     upquote=true,
     frame=single
 }
+\lstdefinestyle{nocoloring}{
+    keywordstyle=\color{black},
+    commentstyle=\color{black},
+    stringstyle=\color{black}
+}
 
 \lstset{style=pythonstyle}
 
@@ -51,24 +57,94 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{\thepage\ Mossman}
-\lhead{PHYS 215, Fa2022, Lab3: Motion of a Batted Ball}
+\fancyhead[R]{\thepage}
+\fancyhead[L]{Mossman: Project 1}
 
-\title{Phys 215: Lab 3}
+\title{ECE 464: Fault Simulation}
 \author{Jaden Mossman}
-\date{September 2022}
+\date{October 2022}
 
 \begin{document}
     \maketitle
     \tableofcontents
 
     \newpage
-    \section{Intro}
+    \section{Introduction and Workload Reflection}
+        \begin{enumerate}[label=\Alph*.]
+            \item Which modules does your program achieve?
+            
+            My Program achieves all the specified modules, including ``Single TV, single fault'', ``Single TV, all faults'', ``Fault coverage of 1-10 TVs'', and ``Supporting unknown input''.
+            
+            \item Explain how you implement each of the following functionalities:
+            \begin{enumerate}[label=\roman*.]
+                \item Circuit simulation.
+                \item Fault simulation.
+                \item Full fault list generation.
+            \end{enumerate}
+            
+            \item How many hours in total did you take to finish this project? What are your main contributions to this project? How did you help your team member?
+            
+            I spent approximately 12 hours on this project. My main contributions were everything because I did not have any team members. I helped my team by doing everything.
+            
+        \end{enumerate}
 
-    \section{Procedures}
+    \section{Screenshots of Test Cases}
+        \newcommand{\testtxt}[1]{\lstinputlisting[style=nocoloring]{report/testouts/#1.txt}}
+        \begin{enumerate}[label=\Alph*.]
+            \item Single TV, single fault
+            \begin{enumerate}[label=\roman*.]
+                \item Show 2 example runs for hw1.bench, one with a tv detecting a fault, one with a tv not detecting a fault.
+                \testtxt{A.i.1}
+                \testtxt{A.i.2}
+                
+                \item Show 2 example runs for c17.bench, one with tv=00000, and a fault of your choice, one with tv=11111, and fault 22-10-0 (node 22 with input 10 stuck at 0).
+                \testtxt{A.ii.1}
+                \testtxt{A.ii.2}
+
+                \item Show 1 example run for c432.
+                \testtxt{A.iii}
+
+                \item Show 1 example run for c1355.
+                \testtxt{A.iv}
+
+            \end{enumerate}
+
+            \item Single TV, all faults
+            \begin{enumerate}[label=\roman*.]
+                \item Show 1 example run for hw1.bench
+                \testtxt{B.i}
+
+                \item Show 1 example run for c17.bench
+                \testtxt{B.ii}
+
+                \item Show 1 example run for c499.bench
+                \testtxt{B.iii}
+
+                \item Show 1 example run for c880.bench
+                \testtxt{B.iv}
+
+            \end{enumerate}
+            
+            \item Fault coverage of 1-10 TV
+            \begin{enumerate}[label=\roman*.]
+                \item Show a table or plot for c2670.bench
+                \testtxt{C.i}
+
+                \item Show a table or plot for c7552.bench
+                \testtxt{C.ii}
+                
+            \end{enumerate}
+            
+            \item Unknown input support - use hw1.bench and c880.bench to show your results.
+        \end{enumerate}
+
+    \section{Link to repl}
     
     \newpage
-    \section{Full Script Used}
-        \lstinputlisting[language=Python]{ ../main.py }
+    \section{All Files Used}
+        \newcommand{\FileUsed}[1]{\section*{ #1 }\lstinputlisting[language=Python]{ #1 }}
+        \FileUsed{main.py}
+        \FileUsed{circuit.py}
+        \FileUsed{node2.py}
 
 \end{document}
