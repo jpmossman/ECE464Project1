@@ -16,7 +16,7 @@ report/trash/report.pdf: report/report.tex $(SRC) $(TESTOUTS)
 	latexmk report/report.tex -pdf -outdir=report/trash
 
 report/testouts/%.txt: report/testins/%.txt $(SRC)
-	python3 main.py < $< > $@
+	python3 main.py test < $< > $@
 
 report/submit/%.py: %.py
 	cp $< $@

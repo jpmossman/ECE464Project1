@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from circuit import Circuit
+import sys
 
 def exit_input(*args, **kwargs) -> str:
     """input(), but exit the program if the text begins with exit. Mostly used for automated testing"""
@@ -7,6 +8,8 @@ def exit_input(*args, **kwargs) -> str:
     if x.startswith('exit'):
         print(x)
         exit()
+    if 'test' in sys.argv:
+        print(x)
     return x
 
 def main():
