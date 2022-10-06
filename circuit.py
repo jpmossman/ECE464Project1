@@ -3,7 +3,7 @@ JP Mossman, Fall 2022
 """
 from copy import deepcopy as copy
 from node2 import Node2, NodeGraph
-from typing import Dict, List
+from typing import Dict, List, Union, Tuple
 
 class Circuit:
     """
@@ -50,18 +50,21 @@ class Circuit:
             if node.role == 'output'
         ]
     
-    def resolve_inputs(self, inputs:Dict[str,str]) -> Dict[str,str]:
+    def resolve_inputs(self, inputs:Union[Dict[str,str], str]) -> Tuple[List[Node2], List[str]]:
         """
         Recursively resolve the values of the output nodes for a given input
         """
         # Set input values
-        for name, state in inputs.items():
-            self.graph[name].state = state
-        # Resolve the value of each output node
-        outputs = {}
+        if isinstance(inputs, dict):
+            for node in self.inputs:
+                node.state = inputs[node.name]
+        elif isinstance(inputs, str):
+            for node, bit in zip(self.inputs, inputs):
+                node.state = bit
+        outputs = []
         for node in self.output:
-            outputs[node.name] = node.resolve()
-        return outputs
+            outputs.append(node.resolve())
+        return self.output, outputs
     
     def __repr__(self) -> str:
         # TODO: Align input column so that longer inputs look nice
