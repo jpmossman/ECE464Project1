@@ -1,3 +1,4 @@
-benches/c17.bench
-00000
-exit: NYI
+hw1
+000
+y-g-0
+exit

@@ -31,7 +31,9 @@ class Node2:
         self.state = '~'
         self.level = None
         self.pg = parent_graph
-        self.faults = []
+        self.faults:List[str] = []
+        self.inputs:List[Node2] = []
+        self.outputs:List[Node2] = []
 
         # Figure out which function to use for resolution
         if self.gtype == 'and':
@@ -48,6 +50,8 @@ class Node2:
             self.func = s5.S5_XNOR
         elif self.gtype == 'not':
             self.func = s5.S5_NOT
+        elif self.gtype == 'buf':
+            self.func = s5.S5_BUF
         
         # Check if node has already been added to graph
         if name in self.pg:
@@ -115,11 +119,24 @@ class Node2:
         if self.state != '~':
             return self.state
         # Get a list of and resolve all input states
-        inputs = [self.pg[name].resolve() for name in self.ilist]
+        inputs = [node.resolve() for node in self.inputs]
         # Search for faults and perform 5 state algebra
         for f in self.faults:
             if f[0] == 'input':
-                pass
+                index = self.ilist.index(f[1])
+                correct, fault = inputs[index], f[2]
+                if correct == fault:
+                    continue
+                elif correct == '1' and fault == '0':
+                    inputs[index] = 'D'
+                elif correct == '0' and fault == '1':
+                    inputs[index] = "D'"
+                else:
+                    inputs[index] = 'u'
+                    print("UNEXPECTED INPUT: fault recieved 5 state")
+            elif f[0] == 'output':
+                self.state = f[1]
+                return self.state
         # Resolve output state dependent on gate type and input states
         self.state = self.func(*inputs)
         # Return current state
@@ -159,6 +176,9 @@ class Node2:
         """
         Doubly link the graph for fault tv generation purposes
         """
+        self.inputs = self.get_inputs()
+        for inp in self.inputs:
+            inp.outputs.append(self)
     
     def __repr__(self) -> str:
         string = f"Node2: {self.name}\n"

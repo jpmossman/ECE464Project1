@@ -60,6 +60,9 @@ def S5_XOR(*args):
 def S5_NOT(a):
     return STATE5_NOT_DICT[a]
 
+def S5_BUF(a):
+    return a
+
 def S5_NAND(*args):
     return STATE5_NOT_DICT[S5_AND(*args)]
 

@@ -2,6 +2,7 @@
 JP Mossman, Fall 2022
 """
 from copy import deepcopy as copy
+from unittest import result
 from node2 import Node2, NodeGraph
 from typing import Dict, List, Union, Tuple
 
@@ -32,6 +33,8 @@ class Circuit:
         self.graph:Dict[str,Node2] = NodeGraph()
         for line in self.content:
             node = Node2.from_expression(line,self.graph)
+        for name,node in self.graph.items():
+            node.doubly_link()
 
         # Get lists of nodes
         self.inputs:List[Node2] = [
@@ -54,6 +57,9 @@ class Circuit:
         """
         Recursively resolve the values of the output nodes for a given input
         """
+        # Set everything to unassigned
+        for name, node in self.graph.items():
+            node.state = '~'
         # Set input values
         if isinstance(inputs, dict):
             for node in self.inputs:
@@ -70,6 +76,8 @@ class Circuit:
         """
         Add a fault to the circuit. Faults are of the form a-b-0 or a-0
         """
+        name = fault.split('-')[0]
+        self.graph[name].add_fault(fault)
     
     def __repr__(self) -> str:
         # TODO: Align input column so that longer inputs look nice
@@ -152,14 +160,13 @@ def main():
     # x = Circuit(filename='benches/c17.bench')
     print(x)
 
+    x.add_fault('y-g-0')
+
     print("Part 2: Solving the bench")
     results = []
     for i in range(2**len(x.inputs)):
         input_vector = bin(i)[2:].zfill(len(x.inputs))
-        inputs = {}
-        for inp, val in zip(x.inputs, input_vector):
-            inputs[inp.name] = val
-        results.append((inputs,x.resolve_inputs(inputs)))
+        results.append((input_vector,x.resolve_inputs(input_vector)))
     
     # Print top line
     mid_line_format = ""
@@ -175,7 +182,10 @@ def main():
     top_line = top_line_left + " |" + top_line_right
     print(top_line)
     print('-'*len(top_line_left) + "-+" + '-'*len(top_line_right))
-    print(results[3])
+    
+    for r in results:
+        ins, outs = r[0], r[1][1]
+        print(outs)
 
 if __name__ == '__main__':
     main()
