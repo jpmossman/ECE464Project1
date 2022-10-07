@@ -79,6 +79,15 @@ class Circuit:
         name = fault.split('-')[0]
         self.graph[name].add_fault(fault)
     
+    def clear_fault(self, name:str):
+        self.graph[name].clear_faults()
+    
+    def all_possible_faults(self) -> List[str]:
+        faults = []
+        for _, node in self.graph.items():
+            faults += node.possible_faults()
+        return faults
+    
     def __repr__(self) -> str:
         # TODO: Align input column so that longer inputs look nice
         max_node_name = max((len(name) for name, _ in self.graph.items()))

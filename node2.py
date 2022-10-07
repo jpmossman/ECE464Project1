@@ -180,6 +180,13 @@ class Node2:
         for inp in self.inputs:
             inp.outputs.append(self)
     
+    def possible_faults(self) -> List[str]:
+        faults = [f'{self.name}-0',f'{self.name}-1']
+        for i in self.ilist:
+            faults.append(f'{self.name}-{i}-0')
+            faults.append(f'{self.name}-{i}-1')
+        return faults
+    
     def __repr__(self) -> str:
         string = f"Node2: {self.name}\n"
         string += f"   {self.role}\n"

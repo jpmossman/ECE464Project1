@@ -1,1 +1,4 @@
-exit: NYI
+B
+hw1
+001
+exit

@@ -38,7 +38,7 @@ def run_and_print(bench:Circuit, tv:str):
         print(f"   {out.name}: {bit}")
     return results
 
-def main():
+def part_A():
     # Open a user specified test bench
     bench_name = exit_input("Enter bench name (press enter for default circ.bench): ")
     if not bench_name:
@@ -80,6 +80,72 @@ def main():
         print("TV is able to detect specified fault")
     else:
         print("TV is NOT able to detect specified fault")
+
+def part_B():
+    # Open a user specified test bench
+    bench_name = exit_input("Enter bench name (press enter for default circ.bench): ")
+    if not bench_name:
+        bench_name = "circ.bench"
+    else:
+        bench_name
+        if not bench_name.startswith("benches/"):
+            bench_name = "benches/" + bench_name
+        if not bench_name.endswith(".bench"):
+            bench_name = bench_name + ".bench"
+    bench = Circuit(bench_name)
+    
+    # Print basic bench information
+    print(bench)
+
+    # Print input and output size
+    insize = len(bench.inputs)
+    outsize = len(bench.output)
+    print(f'There are {insize} input bits for {bench.filename}')
+    print(f'There are {outsize} output bits for {bench.filename}')
+    print(f"The input order is:")
+    for inp in bench.inputs:
+        print(f'   {inp.name}')
+    
+    # Print out all faults
+    faults = bench.all_possible_faults()
+    print()
+    print(f"There are {len(faults)} possible faults:")
+    for f in faults:
+        print(f'   {f}')
+    
+    # Ask the user for an input vector
+    print()
+    tv = exit_input(f"Please enter a {insize} bit tv (e.g. abc=000): ")
+    # Run testvector on all faults
+    detected = []
+    for f in faults:
+        bench.add_fault(f)
+        _, results = bench.resolve_inputs(tv)
+        if "D" in results or "D'" in results:
+            print(f"   HIT!  {f}")
+            detected.append(f)
+        else:
+            print(f"   miss. {f}")
+        bench.clear_fault(f.split('-')[0])
+    print(f'{100*len(detected)/len(faults):02.3f}% of faults covered by the TV {tv}.')
+
+def part_C():
+    pass
+
+def main():
+    print(
+        "Would you like to see:\n"
+        "   A: Single TV, single fault\n"
+        "   B: Single TV, all faults\n"
+        "   C: Fault coverage of 1-10 TVs\n"
+    )
+    choice = exit_input("Choose A, B, or C: ")
+    if choice == 'A':
+        part_A()
+    elif choice == 'B':
+        part_B()
+    elif choice == 'C':
+        part_C()
     
 
 if __name__ == "__main__":
