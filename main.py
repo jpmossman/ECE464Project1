@@ -60,5 +60,9 @@ def main():
     print(mid_row)
     print(bot_row)
 
+    # Ask the user to specify a fault
+    fault = exit_input("Please specify a fault (of the form a-0 or a-b-0): ")
+    
+
 if __name__ == "__main__":
     main()

@@ -65,6 +65,11 @@ class Circuit:
         for node in self.output:
             outputs.append(node.resolve())
         return self.output, outputs
+
+    def add_fault(self, fault:str) -> bool:
+        """
+        Add a fault to the circuit. Faults are of the form a-b-0 or a-0
+        """
     
     def __repr__(self) -> str:
         # TODO: Align input column so that longer inputs look nice

@@ -17,7 +17,7 @@ def NodeGraph() -> Dict[str,Node2]:
     return {}
 
 class Node2:
-    def __init__(self,name:str,gtype:str,ilist:list[str],role:str,parent_graph:Dict[str,Node2]) -> None:
+    def __init__(self,name:str,gtype:str,ilist:List[str],role:str,parent_graph:Dict[str,Node2]) -> None:
         """
         A class for representing a node in combinational circuit.
         Second version of this class, has some major differences such as using
@@ -30,6 +30,7 @@ class Node2:
         self.state = '~'
         self.level = None
         self.pg = parent_graph
+        self.faults = []
         
         # Check if node has already been added to graph
         if name in self.pg:
@@ -96,6 +97,10 @@ class Node2:
             return self.state
         # Get a list of and resolve all input states
         inputs = [self.pg[name].resolve() for name in self.ilist]
+        # Search for faults and perform 5 state algebra
+        for f in self.faults:
+            if f[0] == 'input':
+                pass
         # Resolve output state dependent on gate type and input states
         if self.gtype == 'and':
             if all(i == '1' for i in inputs):
@@ -149,6 +154,41 @@ class Node2:
         # Return current state
         return self.state
 
+    def add_fault(self, fault:str) -> bool:
+        """
+        Attach a fault to the node. Faults are of the form a-b-0 or a-0
+        """
+        # Determine form of fault
+        if fault.count('-') > 2: # Fault formatted incorrectly
+            pass # Raise some sort of format error
+        elif fault.count('-') == 2: # Input SA fault
+            parent, child, val = fault.split('-')
+            if parent != self.name:
+                pass # Raise some sort of error?
+            else:
+                self.faults.append(("input", child, val))
+        elif fault.count('-') == 1: # Output SA fault
+            parent, val = fault.split('-') 
+            if parent != self.name:
+                pass # Raise some sort of error?
+            else:
+                self.faults.append(("output",val))
+        else: # Fault formatted incorrectly
+            pass # Raise some sort of format erro
+
+    def clear_faults(self) -> int:
+        """
+        Remove all faults
+        """
+        count = len(self.faults)
+        self.faults = []
+        return count
+
+    def doubly_link(self) -> bool:
+        """
+        Doubly link the graph for fault tv generation purposes
+        """
+    
     def __repr__(self) -> str:
         string = f"Node2: {self.name}\n"
         string += f"   {self.role}\n"

@@ -23,3 +23,6 @@ report/submit/%.py: %.py
 
 clean:
 	rm -rf report/trash/* report/testouts/* report/submit/*
+
+tested: $(TESTOUTS)
+	touch tested
