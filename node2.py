@@ -1,6 +1,7 @@
 from typing import NamedTuple, Dict, List
 from copy import deepcopy as copy
 import re
+import state5 as s5
 
 class Node2:
     """
@@ -31,6 +32,22 @@ class Node2:
         self.level = None
         self.pg = parent_graph
         self.faults = []
+
+        # Figure out which function to use for resolution
+        if self.gtype == 'and':
+            self.func = s5.S5_AND
+        elif self.gtype == 'nand':
+            self.func = s5.S5_NAND
+        elif self.gtype == 'or':
+            self.func = s5.S5_OR
+        elif self.gtype == 'nor':
+            self.func = s5.S5_NOR
+        elif self.gtype == 'xor':
+            self.func = s5.S5_XOR
+        elif self.gtype == 'xnor':
+            self.func = s5.S5_XNOR
+        elif self.gtype == 'not':
+            self.func = s5.S5_NOT
         
         # Check if node has already been added to graph
         if name in self.pg:
@@ -41,9 +58,11 @@ class Node2:
             elif self.pg[name].role == 'output' and self.role == 'intern':
                 self.pg[name].ilist = ilist
                 self.pg[name].gtype = gtype.lower()
+                self.pg[name].func = self.func
             elif self.pg[name].role == 'input' and self.role == 'intern':
                 self.pg[name].ilist = ilist
                 self.pg[name].gtype = gtype.lower()
+                self.pg[name].func = self.func
         # If not, add node to graph
         else:
             self.pg[name] = self
@@ -102,55 +121,7 @@ class Node2:
             if f[0] == 'input':
                 pass
         # Resolve output state dependent on gate type and input states
-        if self.gtype == 'and':
-            if all(i == '1' for i in inputs):
-                self.state = '1'
-            elif any(i == '0' for i in inputs):
-                self.state = '0'
-            else:
-                self.state = 'u'
-        elif self.gtype == 'nand':
-            if all(i == '1' for i in inputs):
-                self.state = '0'
-            elif any(i == '0' for i in inputs):
-                self.state = '1'
-            else:
-                self.state = 'u'
-        elif self.gtype == 'or':
-            if any(i == '1' for i in inputs):
-                self.state = '1'
-            elif all(i == '0' for i in inputs):
-                self.state = '0'
-            else:
-                self.state = 'u'
-        elif self.gtype == 'nor':
-            if any(i == '1' for i in inputs):
-                self.state = '0'
-            elif all(i == '0' for i in inputs):
-                self.state = '1'
-            else:
-                self.state = 'u'
-        elif self.gtype == 'xor':
-            if any(i != '0' and i != '1' for i in inputs):
-                self.state = 'u'
-            elif inputs.count('1') % 2 == 1:
-                self.state = '1'
-            else:
-                self.state = '0'
-        elif self.gtype == 'xnor':
-            if any(i != '0' and i != '1' for i in inputs):
-                self.state = 'u'
-            elif inputs.count('1') % 2 == 1:
-                self.state = '0'
-            else:
-                self.state = '1'
-        elif self.gtype == 'not':
-            if inputs[0] == '0' or inputs[0] == '1':
-                self.state = '0' if inputs[0] == '1' else '1'
-            else:
-                self.state = 'u'
-        else:
-            raise RuntimeError('Could not resolve state')
+        self.state = self.func(*inputs)
         # Return current state
         return self.state
 

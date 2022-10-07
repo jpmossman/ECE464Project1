@@ -175,14 +175,7 @@ def main():
     top_line = top_line_left + " |" + top_line_right
     print(top_line)
     print('-'*len(top_line_left) + "-+" + '-'*len(top_line_right))
-    print(results)
-    for r in results:
-        vals = []
-        for i in x.inputs:
-            vals.append(r[1].nodes[i].state)
-        for o in x.output:
-            vals.append(r[1].nodes[o].state)
-        print(mid_line_format.format(*vals))
+    print(results[3])
 
 if __name__ == '__main__':
     main()

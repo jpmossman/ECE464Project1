@@ -1,4 +1,3 @@
-""""""
 STATE5_NOT_DICT = {
     "0" : "1",
     "1" : "0",
@@ -57,6 +56,9 @@ def S5_XOR(*args):
     for bit in args[1:]:
         state = _s5_xor(state, bit)
     return state
+
+def S5_NOT(a):
+    return STATE5_NOT_DICT[a]
 
 def S5_NAND(*args):
     return STATE5_NOT_DICT[S5_AND(*args)]
