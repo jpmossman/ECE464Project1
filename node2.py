@@ -134,11 +134,20 @@ class Node2:
                 else:
                     inputs[index] = 'u'
                     print("UNEXPECTED INPUT: fault recieved 5 state")
-            elif f[0] == 'output':
-                self.state = f[1]
-                return self.state
         # Resolve output state dependent on gate type and input states
         self.state = self.func(*inputs)
+        for f in self.faults:
+            if f[0] == 'output':
+                correct, fault = self.state, f[1]
+                if correct == fault:
+                    continue
+                elif correct == '1' and fault == '0':
+                    self.state = 'D'
+                elif correct == '0' and fault == '1':
+                    self.state = "D'"
+                else:
+                    self.state = 'u'
+                    print("UNEXPECTED INPUT: fault recieved 5 state")
         # Return current state
         return self.state
 

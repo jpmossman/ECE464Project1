@@ -70,73 +70,123 @@
 
     \newpage
     \section{Introduction and Workload Reflection}
-        \begin{enumerate}[label=\Alph*.]
-            \item Which modules does your program achieve?
+        % \begin{enumerate}[label=\Alph*.]
+            % \item Which modules does your program achieve?
+            \subsection{Which modules does your program achieve?}
             
             My Program achieves all the specified modules, including ``Single TV, single fault'', ``Single TV, all faults'', ``Fault coverage of 1-10 TVs'', and ``Supporting unknown input''.
             
-            \item Explain how you implement each of the following functionalities:
-            \begin{enumerate}[label=\roman*.]
-                \item Circuit simulation.
-                \item Fault simulation.
-                \item Full fault list generation.
-            \end{enumerate}
+            \subsection{Explain how you implement each of the following functionalities:}
+            % \item Explain how you implement each of the following functionalities:
+            % \begin{enumerate}[label=\roman*.]
+                \subsubsection{Circuit simulation}
+                % \item Circuit simulation:
+                
+                To simulate the circuit for a given input test vector, we represent the circuit as a graph of nodes. Each node starts off with its state unassigned. The bits of the input test vector are then assigned to their relevant input node, letting its state be assigned.
+                
+                Then, we examine each output node and ``resolve'' it's value. If a node has an assigned state, the state is simply returned. If it is not, then each of it's input nodes is resolved recursively, and their values are used to compute the parent node's value with its gate. Essentially, we are looking at the output nodes first, moving our way towards the already assigned inputs, and then propagating the inputs towards back towards the outputs.
+
+                To account for unknown input states, we simply need whatever function implements the gate logic to take it into account. This just makes the logic in those gates a little more complicated, but not significantly.
+
+                \subsubsection{Fault simulation}
+                % \item Fault simulation:
+                
+                To simulate faults, we assign the fault to the node that it effects. e.g. faults ``a-b-0'' and ``a-1'' both get assigned to node `a' in our graph. Then, when the value of the node is being resolved, we take the fault into account. If there is a fault effecting the output (e.g. ``a-1'') then the state is 
+
+                \subsubsection{Full fault list generation}
+                % \item Full fault list generation.
+            % \end{enumerate}
             
-            \item How many hours in total did you take to finish this project? What are your main contributions to this project? How did you help your team member?
+            \subsection{How many hours in total did you take to finish this project?}
+            What are your main contributions to this project? How did you help your team member?
+            % \item How many hours in total did you take to finish this project? What are your main contributions to this project? How did you help your team member?
             
             I spent approximately 12 hours on this project. My main contributions were everything because I did not have any team members. I helped my team by doing everything.
             
-        \end{enumerate}
+        % \end{enumerate}
 
     \section{Screenshots of Test Cases}
         \newcommand{\testtxt}[1]{\lstinputlisting[style=nocoloring]{report/testouts/#1.txt}}
-        \begin{enumerate}[label=\Alph*.]
-            \item Single TV, single fault
-            \begin{enumerate}[label=\roman*.]
-                \item Show 2 example runs for hw1.bench, one with a tv detecting a fault, one with a tv not detecting a fault.
+        % \begin{enumerate}[label=\Alph*.]
+            \subsection{Single TV, single fault}
+            % \item Single TV, single fault
+            % \begin{enumerate}[label=\roman*.]
+                \subsubsection{hw1}
+                Show 2 example runs for hw1.bench, one with a tv detecting a fault, one with a tv not detecting a fault.
+                % \item Show 2 example runs for hw1.bench, one with a tv detecting a fault, one with a tv not detecting a fault.
                 \testtxt{A.i.1}
                 \testtxt{A.i.2}
                 
-                \item Show 2 example runs for c17.bench, one with tv=00000, and a fault of your choice, one with tv=11111, and fault 22-10-0 (node 22 with input 10 stuck at 0).
+                \subsubsection{c17}
+                Show 2 example runs for c17.bench, one with tv=00000, and a fault of your choice, one with tv=11111, and fault 22-10-0 (node 22 with input 10 stuck at 0).
+                % \item Show 2 example runs for c17.bench, one with tv=00000, and a fault of your choice, one with tv=11111, and fault 22-10-0 (node 22 with input 10 stuck at 0).
                 \testtxt{A.ii.1}
                 \testtxt{A.ii.2}
 
-                \item Show 1 example run for c432.
+                \subsubsection{c432}
+                Show 1 example run for c432.
+                % \item Show 1 example run for c432.
                 \testtxt{A.iii}
 
-                \item Show 1 example run for c1355.
+                \subsubsection{c1355}
+                Show 1 example run for c1355.
+                % \item Show 1 example run for c1355.
                 \testtxt{A.iv}
 
-            \end{enumerate}
+            % \end{enumerate}
 
-            \item Single TV, all faults
-            \begin{enumerate}[label=\roman*.]
-                \item Show 1 example run for hw1.bench
+            \subsection{Single TV, all faults}
+            % \item Single TV, all faults
+            % \begin{enumerate}[label=\roman*.]
+                \subsubsection{hw1}
+                Show 1 example run for hw1.bench
+                % \item Show 1 example run for hw1.bench
                 \testtxt{B.i}
 
-                \item Show 1 example run for c17.bench
+                \subsubsection{c17}
+                Show 1 example run for c17.bench
+                % \item Show 1 example run for c17.bench
                 \testtxt{B.ii}
 
-                \item Show 1 example run for c499.bench
+                \subsubsection{c499}
+                Show 1 example run for c499.bench
+                % \item Show 1 example run for c499.bench
                 \testtxt{B.iii}
 
-                \item Show 1 example run for c880.bench
+                \subsubsection{c880}
+                Show 1 example run for c880.bench
+                % \item Show 1 example run for c880.bench
                 \testtxt{B.iv}
 
-            \end{enumerate}
+            % \end{enumerate}
             
-            \item Fault coverage of 1-10 TV
-            \begin{enumerate}[label=\roman*.]
-                \item Show a table or plot for c2670.bench
+            \subsection{Fault Coverage of 1-10 TV}
+            % \item Fault coverage of 1-10 TV
+            % \begin{enumerate}[label=\roman*.]
+                \subsubsection{c2670}
+                Show a table or plot for c2670.bench
+                % \item Show a table or plot for c2670.bench
                 \testtxt{C.i}
+                \includegraphics[width=\textwidth]{report/testouts/c2670.png}
 
-                \item Show a table or plot for c7552.bench
+                \subsubsection{c7552}
+                Show a table or plot for c7552.bench
+                % \item Show a table or plot for c7552.bench
                 \testtxt{C.ii}
+                % \includegraphics[width=\textwidth]{report/testouts/c7552.png}
                 
-            \end{enumerate}
+            % \end{enumerate}
             
-            \item Unknown input support - use hw1.bench and c880.bench to show your results.
-        \end{enumerate}
+            \subsection{Unknown Input Support}
+            Use hw1.bench and c880.bench to show your results
+            % \item Unknown input support - use hw1.bench and c880.bench to show your results.
+                \subsubsection{hw1}
+                    \testtxt{D.i}
+                
+                \subsubsection{c880}
+                    \testtxt{D.ii}
+
+        % \end{enumerate}
 
     \section{Link to repl}
         \url{https://replit.com/@JadenMossman/ECE464Project1}
